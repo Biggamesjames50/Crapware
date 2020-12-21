@@ -1,0 +1,20 @@
+if params.len == 0 then exit("<color=#2EFEF7>usage: 4map [ip]")
+
+router = get_router(params[0])
+if not router then exit("<color=red>Invalip ip")
+
+lans = router.devices_lan_ip
+output = "LAN PORT STATE SERVICE VERSION\n"
+for lan in lans
+	ports = router.device_ports(lan)
+	for port in ports
+		if port.is_closed then
+			closed = "<color=red>CLOSED</color>"
+		else
+			closed = "<color=green>OPEN</color>"
+		end if
+		output = output + lan + " " + port.port_number + " " + closed + " " + router.port_info(port) + "\n"
+	end for
+end for
+
+print(format_columns(output))
